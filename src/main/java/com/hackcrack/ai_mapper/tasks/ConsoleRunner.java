@@ -34,7 +34,7 @@ public class ConsoleRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        for (int i = 0; i <= 0; i++) {
+        for (int i = 0; i <= DATASET_SIZE; i++) {
             String directoryName = TEST_DATA_DIRECTORY_PATTERN + i;
 
             String sourceFileName = directoryName + "/source_schema.json";
