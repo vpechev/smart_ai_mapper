@@ -8,6 +8,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
+import java.util.stream.IntStream;
+
 @SpringBootApplication(scanBasePackages= {"com.hackcrack.ai_mapper.io", "com.hackcrack.ai_mapper.chatgpt"})
 public class ConsoleRunner implements CommandLineRunner {
 
@@ -44,9 +47,20 @@ public class ConsoleRunner implements CommandLineRunner {
             JSONObject targetJsonObject = ioService.readJsonFile(targetFileName);
 
             System.out.println("Creating mapping schema for file " + i);
-            JSONObject outputMappingSchema = mapperEngineService.createMappingSchema(sourceJsonObject, targetJsonObject);
+            List<JSONObject> outputMappingSchemas = mapperEngineService.createMappingSchema(sourceJsonObject, targetJsonObject);
 
-            ioService.writeJsonFile(OUTPUT_DIRECTORY, " output_" + i + ".json", outputMappingSchema);
+            if(outputMappingSchemas.size() == 1) {
+                ioService.writeJsonFile(OUTPUT_DIRECTORY, " output_" + i + ".json", outputMappingSchemas.get(0));
+            } else {
+                final int outerIndex = i;
+                IntStream
+                    .range(0, outputMappingSchemas.size())
+                    .forEach(idx ->
+                        ioService.writeJsonFile(OUTPUT_DIRECTORY, " output_" + outerIndex + "_" + idx + ".json", outputMappingSchemas.get(0))
+                    );
+            }
+
+
         }
     }
 }

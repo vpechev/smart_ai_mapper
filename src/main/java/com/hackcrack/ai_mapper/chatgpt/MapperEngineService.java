@@ -4,6 +4,8 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class MapperEngineService {
 
@@ -14,7 +16,7 @@ public class MapperEngineService {
         this.chatGptService = chatGptService;
     }
 
-    public JSONObject createMappingSchema(JSONObject source, JSONObject target) {
+    public List<JSONObject> createMappingSchema(JSONObject source, JSONObject target) {
         return chatGptService.invokeChatGPT(source, target);
     }
 }

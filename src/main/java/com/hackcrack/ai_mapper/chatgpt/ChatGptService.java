@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class ChatGptService {
@@ -33,28 +34,40 @@ public class ChatGptService {
 
     private JSONParser parser = new JSONParser();
 
-    public JSONObject invokeChatGPT(JSONObject source, JSONObject target) {
+    private static final JSONObject ERROR_RESPONSE_OBJECT = new JSONObject();
+
+    static {
+        ERROR_RESPONSE_OBJECT.put("error", "Failed to create mapping schema");
+    }
+
+    public List<JSONObject> invokeChatGPT(JSONObject source, JSONObject target) {
         ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
                 .model(GPT_MODEL)
                 .messages(generateMessagesFromJson(source, target))
+                .n(3)
                 .build();
         List<ChatCompletionChoice> choices = service.createChatCompletion(chatCompletionRequest).getChoices();
         if (choices.size() == 1) {
-            String gptResponseContent = choices.get(0).getMessage().getContent();
-            try {
-                JSONObject gptResponseContentJsonObject = (JSONObject) parser.parse(gptResponseContent);
-                return gptResponseContentJsonObject;
-            } catch (ParseException e) {
-                System.out.println("Error parsing GPT response: " + e.getMessage());
-                System.out.println("ChatGPT returned: " + gptResponseContent);
-                //throw new RuntimeException(e);
-                return new JSONObject();
-            }
+            return List.of(transformJsonObject(choices.get(0).getMessage()));
         } else if(choices.size() > 0) {
-            return new JSONObject();
+            return choices.stream().map(x -> transformJsonObject(x.getMessage())).collect(Collectors.toList());
         } else {
-            System.out.println("Completion created: <EMPTY>");
-            return new JSONObject();
+            ERROR_RESPONSE_OBJECT.put("response_content", "No response from GPT");
+            return List.of(ERROR_RESPONSE_OBJECT);
+        }
+    }
+
+    private JSONObject transformJsonObject(ChatMessage chatMessage) {
+        String gptResponseContent = chatMessage.getContent();
+        try {
+            JSONObject gptResponseContentJsonObject = (JSONObject) parser.parse(gptResponseContent);
+            return gptResponseContentJsonObject;
+        } catch (ParseException e) {
+            System.out.println("Error parsing GPT response: " + e.getMessage());
+            System.out.println("ChatGPT returned: " + gptResponseContent);
+
+            ERROR_RESPONSE_OBJECT.put("response_content", gptResponseContent);
+            return ERROR_RESPONSE_OBJECT;
         }
     }
 
