@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "student_id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "age": {
+        "type": "integer"
+      },
+      "courses": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "required": ["student_id", "name", "age", "courses"]
+  }

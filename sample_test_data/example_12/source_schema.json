@@ -1,0 +1,38 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "customer_id": {
+        "type": "string"
+      },
+      "name": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string",
+        "format": "email"
+      },
+      "subscription": {
+        "type": "object",
+        "properties": {
+          "plan": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive"]
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": ["plan", "status", "start_date", "end_date"]
+      }
+    },
+    "required": ["customer_id", "name", "email", "subscription"]
+  }

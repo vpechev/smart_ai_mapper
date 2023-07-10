@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "contact": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email"
+        }
+      },
+      "required": ["email"]
+    },
+    "personal_info": {
+      "type": "object",
+      "properties": {
+        "age": {
+          "type": "integer"
+        },
+        "address": {
+          "type": "string"
+        }
+      },
+      "required": ["age", "address"]
+    }
+  },
+  "required": ["name", "contact", "personal_info"]
+}

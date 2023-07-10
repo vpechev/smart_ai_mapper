@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "age": {
+      "type": "integer"
+    },
+    "address": {
+      "type": "object",
+      "properties": {
+        "street": {
+          "type": "string"
+        },
+        "city": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "zip_code": {
+          "type": "string",
+          "pattern": "^[0-9]{5}$"
+        }
+      },
+      "required": ["street", "city", "state", "zip_code"]
+    }
+  },
+  "required": ["username", "email", "age", "address"]
+}

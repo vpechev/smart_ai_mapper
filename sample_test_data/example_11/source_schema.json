@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "device_id": {
+        "type": "string"
+      },
+      "device_name": {
+        "type": "string"
+      },
+      "device_type": {
+        "type": "string"
+      },
+      "manufacturer": {
+        "type": "string"
+      },
+      "price": {
+        "type": "number",
+        "minimum": 0
+      },
+      "release_date": {
+        "type": "string",
+        "format": "date"
+      }
+    },
+    "required": ["device_id", "device_name", "device_type", "manufacturer", "price", "release_date"]
+}
