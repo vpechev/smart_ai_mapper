@@ -15,6 +15,6 @@ public class MapperEngineService {
     }
 
     public JSONObject createMappingSchema(JSONObject source, JSONObject target) {
-        return new JSONObject();
+        return chatGptService.invokeChatGPT(source, target);
     }
 }
