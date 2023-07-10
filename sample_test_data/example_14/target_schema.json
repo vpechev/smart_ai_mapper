@@ -1,42 +1,42 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "properties": {
-      "order_id": {
-        "type": "string"
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "order_id": {
+      "type": "string"
+    },
+    "order_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "customer": {
+      "type": "object",
+      "properties": {
+        "customer_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
       },
-      "order_date": {
-        "type": "string",
-        "format": "date"
-      },
-      "customer": {
+      "required": ["customer_id", "name"]
+    },
+    "products": {
+      "type": "array",
+      "items": {
         "type": "object",
         "properties": {
-          "customer_id": {
+          "product_id": {
             "type": "string"
           },
-          "name": {
-            "type": "string"
+          "quantity": {
+            "type": "integer",
+            "minimum": 0
           }
         },
-        "required": ["customer_id", "name"]
-      },
-      "products": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "product_id": {
-              "type": "string"
-            },
-            "quantity": {
-              "type": "integer",
-              "minimum": 0
-            }
-          },
-          "required": ["product_id", "quantity"]
-        }
+        "required": ["product_id", "quantity"]
       }
-    },
-    "required": ["order_id", "order_date", "customer", "products"]
-  }
+    }
+  },
+  "required": ["order_id", "order_date", "customer", "products"]
+}
