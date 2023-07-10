@@ -2,6 +2,8 @@ package com.hackcrack.ai_mapper.chatgpt;
 
 import com.theokanning.openai.completion.CompletionChoice;
 import com.theokanning.openai.completion.CompletionRequest;
+import com.theokanning.openai.completion.chat.ChatCompletionChoice;
+import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.service.OpenAiService;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONArray;
@@ -16,21 +18,22 @@ import java.util.List;
 public class ChatGptService {
 
     private static final String GPT_MODEL = "ada";
-    private static final String GPT_TOKEN = "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";
+    private static final String GPT_API_TOKEN = "YOUR_API_TOKEN";
 
-    private OpenAiService service = new OpenAiService(GPT_TOKEN);
+    private OpenAiService service = new OpenAiService(GPT_API_TOKEN);
 
     public JSONObject invokeChatGPT(JSONObject source, JSONObject target) {
         System.out.println("\nCreating completion...");
 
         // CompletionRequest example
-        CompletionRequest completionRequest = CompletionRequest.builder()
+        ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
                 .model(GPT_MODEL)
-                .prompt(generatePromptMessageFromJson(source, target).toJSONString())
+                .messages(generatePromptMessageFromJson(source, target))
+//                .prompt(generatePromptMessageFromJson(source, target).toJSONString())
                 .build();
-        List<CompletionChoice> choices = service.createCompletion(completionRequest).getChoices();
+        List<ChatCompletionChoice> choices = service.createChatCompletion(chatCompletionRequest).getChoices();
         if (choices.size() > 0) {
-            System.out.println("Completion created: " + choices.get(0).getText());
+            System.out.println("Completion created: " + choices.get(0).toString());
         } else {
             System.out.println("Completion created: <EMPTY>");
         }
@@ -48,7 +51,7 @@ public class ChatGptService {
                 .url(endpoint)
                 .post(body)
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "Bearer " + GPT_TOKEN)
+                .addHeader("Authorization", "Bearer " + GPT_API_TOKEN)
                 .build();
         try {
             Response response = client.newCall(request).execute();
