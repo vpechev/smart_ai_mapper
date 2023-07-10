@@ -1,35 +1,32 @@
 package com.hackcrack.ai_mapper.chatgpt;
 
-import com.theokanning.openai.completion.CompletionChoice;
-import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionChoice;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
+import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.service.OpenAiService;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Component;
 
 import okhttp3.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class ChatGptService {
 
     private static final String GPT_MODEL = "ada";
-    private static final String GPT_API_TOKEN = "YOUR_API_TOKEN";
+    private static final String GPT_API_TOKEN = "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";
 
     private OpenAiService service = new OpenAiService(GPT_API_TOKEN);
 
     public JSONObject invokeChatGPT(JSONObject source, JSONObject target) {
         System.out.println("\nCreating completion...");
 
-        // CompletionRequest example
         ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
                 .model(GPT_MODEL)
-                .messages(generatePromptMessageFromJson(source, target))
-//                .prompt(generatePromptMessageFromJson(source, target).toJSONString())
+                .messages(generateMessagesFromJson(source, target))
                 .build();
         List<ChatCompletionChoice> choices = service.createChatCompletion(chatCompletionRequest).getChoices();
         if (choices.size() > 0) {
@@ -40,44 +37,16 @@ public class ChatGptService {
         return new JSONObject();
     }
 
-    public JSONObject invokeChatGPTApi(JSONObject source, JSONObject target) {
-        OkHttpClient client = new OkHttpClient();
-        String payload = generatePromptMessageFromJson(source, target).toJSONString();
-//        String payload = "Tell me something about yourself";
-        RequestBody body = RequestBody.create(MediaType.parse("application/json"), payload);
-
-        String endpoint = "https://api.openai.com/v1/completions";
-        Request request = new Request.Builder()
-                .url(endpoint)
-                .post(body)
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "Bearer " + GPT_API_TOKEN)
-                .build();
-        try {
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful()) {
-                String responseData = response.body().string();
-                System.out.println("Assistant Response: " + responseData);
-            } else {
-                System.out.println("Request failed with code: " + response.code());
-                System.out.println("Response body: " + response.body());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new JSONObject();
-    }
-
-    private JSONArray generatePromptMessageFromJson(JSONObject source, JSONObject target) {
+    private List<ChatMessage> generateMessagesFromJson(JSONObject source, JSONObject target) {
         // System message to set the context
-        JSONObject systemMessage = buildGPTMessage("system", "You are an assistant that creates mapping schemas.");
+        ChatMessage systemMessage = buildChatMessage("system", "You are an assistant that creates mapping schemas.");
         // User message providing the source JSON object
-        JSONObject userMessage = buildGPTMessage("user", "Create a mapping schema for the given source and target JSON objects:");
+        ChatMessage userMessage = buildChatMessage("user", "Create a mapping schema for the given source and target JSON objects:");
 
-        JSONObject sourceMessage = buildGPTMessage("user", source.toString());
-        JSONObject targetMessage = buildGPTMessage("user", target.toString());
+        ChatMessage sourceMessage = buildChatMessage("user", source.toString());
+        ChatMessage targetMessage = buildChatMessage("user", target.toString());
 
-        JSONArray messages = new JSONArray();
+        List<ChatMessage> messages = new ArrayList<>();
 
         messages.add(systemMessage);
         messages.add(userMessage);
@@ -87,10 +56,10 @@ public class ChatGptService {
     }
 
     @NotNull
-    private static JSONObject buildGPTMessage(String role, String content) {
-        JSONObject userMessage = new JSONObject();
-        userMessage.put("role", role);
-        userMessage.put("content", content);
-        return userMessage;
+    private static ChatMessage buildChatMessage(String role, String content) {
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setRole(role);
+        chatMessage.setContent(content);
+        return chatMessage;
     }
 }
