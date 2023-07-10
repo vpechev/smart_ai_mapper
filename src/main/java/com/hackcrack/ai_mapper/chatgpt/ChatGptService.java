@@ -17,7 +17,7 @@ public class ChatGptService {
 
     private static final String GPT_MODEL = "gpt-3.5-turbo";
 
-    private static final String GPT_API_TOKEN = "";
+    private static final String GPT_API_TOKEN = System.getenv("GPT_API_TOKEN");
 
     private static final String GPT_INSTRUCTION_MESSAGE =
         "Create a mapping schema for the next given source and target JSON objects. "
