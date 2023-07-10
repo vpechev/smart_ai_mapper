@@ -49,6 +49,7 @@ public class IoService {
     private File createFile(String directory, String fileName) {
         try {
             File dir = new File(directory);
+            dir.deleteOnExit();
             dir.mkdirs();
 
             File file = new File(directory + File.separator + fileName);

@@ -15,7 +15,7 @@ public class ConsoleRunner implements CommandLineRunner {
 
     private static final String OUTPUT_DIRECTORY = "test_output_mapping_schemas";
 
-    private static final int DATASET_SIZE = 15;
+    private static final int DATASET_SIZE = 5;
 
     private IoService ioService;
 
@@ -34,7 +34,7 @@ public class ConsoleRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        for (int i = 0; i <= DATASET_SIZE; i++) {
+        for (int i = 1; i <= DATASET_SIZE; i++) {
             String directoryName = TEST_DATA_DIRECTORY_PATTERN + i;
 
             String sourceFileName = directoryName + "/source_schema.json";
@@ -43,6 +43,7 @@ public class ConsoleRunner implements CommandLineRunner {
             String targetFileName = directoryName + "/target_schema.json";
             JSONObject targetJsonObject = ioService.readJsonFile(targetFileName);
 
+            System.out.println("Creating mapping schema for file " + i);
             JSONObject outputMappingSchema = mapperEngineService.createMappingSchema(sourceJsonObject, targetJsonObject);
 
             ioService.writeJsonFile(OUTPUT_DIRECTORY, " output_" + i + ".json", outputMappingSchema);

@@ -2,35 +2,28 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
-    "username": {
+    "full_name": {
       "type": "string"
     },
-    "email": {
+    "birthdate": {
       "type": "string",
-      "format": "email"
-    },
-    "age": {
-      "type": "integer"
+      "format": "date"
     },
     "address": {
-      "type": "object",
-      "properties": {
-        "street": {
-          "type": "string"
-        },
-        "city": {
-          "type": "string"
-        },
-        "state": {
-          "type": "string"
-        },
-        "zip_code": {
-          "type": "string",
-          "pattern": "^[0-9]{5}$"
-        }
-      },
-      "required": ["street", "city", "state", "zip_code"]
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "zip_code": {
+      "type": "string"
+    },
+    "category_code": {
+      "type": "string"
     }
   },
-  "required": ["username", "email", "age", "address"]
+  "required": ["full_name", "birthdate", "address", "city", "state", "zip_code", "category_code"]
 }
