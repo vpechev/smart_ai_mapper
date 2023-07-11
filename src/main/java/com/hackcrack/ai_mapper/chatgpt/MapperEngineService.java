@@ -17,6 +17,12 @@ public class MapperEngineService {
     }
 
     public List<JSONObject> createMappingSchema(JSONObject source, JSONObject target) {
+//        var list = new ArrayList<JSONObject>();
+//        IntStream
+//            .range(0, 3)
+//            .forEach(idx -> list.addAll(chatGptService.invokeChatGPT(source, target)));
+//        return list;
+
         return chatGptService.invokeChatGPT(source, target);
     }
 }

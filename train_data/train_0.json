@@ -1,0 +1,76 @@
+{
+  "source": {
+    "fName" : "string",
+    "lName" : "string",
+    "age" : "number",
+    "height": "string",
+    "address" : "string"
+  },
+  "target": {
+    "name" : "string",
+    "age" : "number",
+    "height": "number",
+    "address" : {
+      "country" : "string",
+      "city" : "string",
+      "street" : "string",
+      "number": "number"
+    }
+  },
+  "mapping_schema" : {
+    "mappings" : [
+      {
+        "source": "fName",
+        "transformation": "concatenate($target, $source, ' ')",
+        "target": "name"
+      },
+      {
+        "source": "lName",
+        "transformation": "concatenate($target, $source, ' ')",
+        "target": "name"
+      },
+      {
+        "source": "age",
+        "transformation": "",
+        "target": "age"
+      },
+      {
+        "source": "height",
+        "transformation": "parseInt($source)",
+        "target": "height"
+      },
+      {
+        "source": "address",
+        "transformation": "split(' ', 0)",
+        "target": "address.country"
+      },
+      {
+        "source": "address",
+        "transformation": "split(' ', 1)",
+        "target": "address.city"
+      },
+      {
+        "source": "address",
+        "transformation": "split(' ', 2)",
+        "target": "address.street"
+      },
+      {
+        "source": "address",
+        "transformation": "split(' ', 3)",
+        "target": "address.number"
+      }
+    ],
+    "transformations" : [
+      {
+        "name" : "concatenate",
+        "value" : "function(valueA, valueB, delimiter) {\n  return valueA + delimiter + valueB\n}",
+        "syntax" : "javascript"
+      },
+      {
+        "name" : "split",
+        "value" : "function(value, index) {\n  return value.split(' ')[index]\n}",
+        "syntax" : "javascript"
+      }
+    ]
+  }
+}
