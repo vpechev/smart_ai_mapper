@@ -24,10 +24,6 @@ public class ChatGptService {
 
     private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
 
-    private static final String GPT_ADDITIONAL_INSTRUCTION_MESSAGE =
-        "Make sure to include a mapping for each field in the source and target objects."
-        + "Include optional Transformation functions more complex mappings.";
-
     private OpenAiService service = new OpenAiService(GPT_API_TOKEN, DEFAULT_TIMEOUT);
 
     private JSONParser parser = new JSONParser();
@@ -81,10 +77,11 @@ public class ChatGptService {
 
         return List.of(
             // System message to set the context
-            buildChatMessage("system", "You are an assistant that creates mapping schemas."),
+            buildSystemChatMessage("Your task is to generate a mapping schema that transforms a given source JSON object into a target JSON object"),
 
             // User message providing the source JSON object
-            buildSystemChatMessage(GPT_ADDITIONAL_INSTRUCTION_MESSAGE),
+            buildSystemChatMessage("Make sure to include a mapping for each field in the source and target objects.\"\n" +
+                    "        + \"Include optional Transformation functions more complex mappings."),
 //            buildSystemChatMessage("Mapping should follow the format from the example below"),
 //            buildSystemChatMessage(buildMappingExampleObject().toJSONString()),
             buildSystemChatMessage("You can use the following example as a reference while doing the mapping:"),
